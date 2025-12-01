@@ -4,6 +4,7 @@ package day01
 
 import utils.readFromPath
 import utils.shouldBe
+import kotlin.math.abs
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -44,6 +45,23 @@ fun part2(input: Sequence<String>): Int {
                 if (curr == 0) hits++
             }
             hits
+        }
+}
+
+fun part2v2(input: Sequence<String>): Int {
+    var curr = 50
+    return input
+        .sumOf { elem ->
+            elem.toRotation().let { (dir, steps) ->
+                val last = curr
+                var div = abs((curr + dir * steps).floorDiv(100))
+                curr = (curr + dir * steps).mod(100)
+                if (dir == -1) {
+                    if (last == 0) div--
+                    if (curr == 0) div++
+                }
+                div
+            }
         }
 }
 
