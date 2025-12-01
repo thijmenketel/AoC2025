@@ -10,10 +10,10 @@ fun main() {
     val basePath = "day01/data"
 
     // TEST for part 1
-    part1(readFromPath("$basePath/test-input.txt")) shouldBe 4
+    part1(readFromPath("$basePath/test-input.txt")) shouldBe 3
 
     // TEST for part 2
-    part2(readFromPath("$basePath/test-input.txt")) shouldBe 4
+    part2(readFromPath("$basePath/test-input.txt")) shouldBe 6
 
     println("Solution of day01:")
     val input = readFromPath("$basePath/input.txt")
@@ -25,6 +25,38 @@ fun main() {
     }
 }
 
-fun part1(input: Sequence<String>): Int = input.toList().size
+fun part1(input: Sequence<String>): Int {
+    var zeroes = 0
+    input.fold(50) { curr, elem ->
+        (curr + elem.toSum()).mod(100).also { if (it == 0) zeroes++ }
+    }
+    return zeroes
+}
 
-fun part2(input: Sequence<String>): Int = input.toList().size
+fun part2(input: Sequence<String>): Int {
+    var curr = 50
+    return input
+        .sumOf { elem ->
+            var hits = 0
+            val (dir, steps) = elem.toRotation()
+            repeat(steps) {
+                curr = (curr + dir).mod(100)
+                if (curr == 0) hits++
+            }
+            hits
+        }
+}
+
+fun String.toSum() =
+    when (first()) {
+        'L' -> -1 * substring(1).toInt()
+        'R' -> substring(1).toInt()
+        else -> error("Invalid direction")
+    }
+
+fun String.toRotation() =
+    when (first()) {
+        'L' -> -1 to substring(1).toInt()
+        'R' -> 1 to substring(1).toInt()
+        else -> error("Invalid direction")
+    }

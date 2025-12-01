@@ -45,6 +45,12 @@ tasks {
     register("today") {
         group = "application"
         description = "Run today's day"
-        dependsOn("runday${LocalDate.now().dayOfMonth}")
+        val dayName =
+            LocalDate
+                .now()
+                .dayOfMonth
+                .toString()
+                .padStart(2, '0')
+        dependsOn("runday$dayName")
     }
 }
