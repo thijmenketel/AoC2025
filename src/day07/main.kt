@@ -43,7 +43,10 @@ fun part1(input: Sequence<String>): Int {
     return splits
 }
 
-fun part2(input: Sequence<String>) = input.toList().findNumOfPaths(1, input.first().indexOf('S'))
+fun part2(input: Sequence<String>): Long {
+    return input.toList().findNumOfPaths2()
+//    return input.toList().findNumOfPaths(1, input.first().indexOf('S'))
+}
 
 fun List<String>.findNumOfPaths(
     row: Int,
@@ -56,4 +59,19 @@ fun List<String>.findNumOfPaths(
             this[row + 1][col] == '^' -> findNumOfPaths(row + 1, col - 1, cache) + findNumOfPaths(row + 1, col + 1, cache)
             else -> findNumOfPaths(row + 1, col, cache)
         }
+    }
+
+fun List<String>.findNumOfPaths2(): Long =
+    LongArray(first().length).let {
+        it[first().indexOf('S')] = 1
+        (2 until size step 2).forEach { i ->
+            this[i].forEachIndexed { j, char ->
+                if (char == '^') {
+                    it[j - 1] += it[j]
+                    it[j + 1] += it[j]
+                    it[j] = 0
+                }
+            }
+        }
+        it.sum()
     }
